@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis-graph"
+version = "0.1.0"
+description = "Explainable attack-path analysis with counterfactual control ranking."
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.scripts]
+aegis-graph = "aegis_graph:main"
+
+[tool.setuptools]
+py-modules = ["aegis_graph"]
+package-dir = {"" = "src"}
