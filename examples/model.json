@@ -1,0 +1,14 @@
+{
+  "nodes": [
+    {"id":"internet","label":"External attacker","kind":"attacker","entry":true},
+    {"id":"portal","label":"Public portal"},
+    {"id":"runner","label":"Build runner"},
+    {"id":"secrets","label":"Secrets vault","crown_jewel":true,"criticality":10}
+  ],
+  "edges": [
+    {"from":"internet","to":"portal","technique":"public exploit","cost":20,"controls":["patch-portal","waf-rule"]},
+    {"from":"portal","to":"secrets","technique":"overprivileged identity","cost":15,"controls":["least-privilege","workload-identity"]},
+    {"from":"internet","to":"runner","technique":"workflow injection","cost":30,"controls":["trusted-builders","pin-actions"]},
+    {"from":"runner","to":"secrets","technique":"credential access","cost":10,"controls":["least-privilege","ephemeral-secrets"]}
+  ]
+}
