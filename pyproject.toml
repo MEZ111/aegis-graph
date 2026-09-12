@@ -4,10 +4,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aegis-graph"
-version = "0.1.0"
-description = "Explainable attack-path analysis with counterfactual control ranking."
+version = "0.2.0"
+description = "Explainable attack-path analysis with bounded ranking and control evidence."
+readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2",
+  "mypy>=1.11",
+  "pip-audit>=2.7",
+  "ruff>=0.6",
+]
 
 [project.scripts]
 aegis-graph = "aegis_graph:main"
@@ -15,3 +24,17 @@ aegis-graph = "aegis_graph:main"
 [tool.setuptools]
 py-modules = ["aegis_graph"]
 package-dir = {"" = "src"}
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
