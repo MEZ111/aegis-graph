@@ -21,7 +21,7 @@ jobs:
       - run: python -m pip install ".[dev]"
       - run: ruff check src tests
       - run: mypy src
-      - run: coverage run --branch -m unittest -v tests/test_aegis_graph.py
+      - run: coverage run --branch -m unittest -v tests/test_aegis_graph.py tests/test_validation_corpus.py
       - run: coverage report --fail-under=85
       - name: Validate example model schema
         run: python -c 'import json,jsonschema; jsonschema.validate(json.load(open("examples/model.json")), json.load(open("docs/model.schema.json")))'
