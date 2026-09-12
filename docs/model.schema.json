@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MEZ111/aegis-graph/blob/main/docs/model.schema.json",
+  "title": "AegisGraph model",
+  "type": "object",
+  "required": ["nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "label": {"type": "string"},
+          "kind": {"type": "string"},
+          "entry": {"type": "boolean"},
+          "crown_jewel": {"type": "boolean"},
+          "criticality": {"type": "integer", "minimum": 1, "maximum": 10}
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "from": {"type": "string", "minLength": 1},
+          "to": {"type": "string", "minLength": 1},
+          "technique": {"type": "string", "minLength": 1},
+          "cost": {"type": "integer", "minimum": 1, "maximum": 100},
+          "controls": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "effectiveness": {"type": "number", "minimum": 0, "maximum": 1},
+          "status": {"enum": ["planned", "implemented", "validated"]},
+          "evidence": {"type": "string"}
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "criticality_weight": {"type": "number", "exclusiveMinimum": 0},
+        "cost_weight": {"type": "number", "minimum": 0},
+        "base_offset": {"type": "number"}
+      }
+    }
+  }
+}

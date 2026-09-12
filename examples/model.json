@@ -6,9 +6,23 @@
     {"id":"secrets","label":"Secrets vault","crown_jewel":true,"criticality":10}
   ],
   "edges": [
-    {"from":"internet","to":"portal","technique":"public exploit","cost":20,"controls":["patch-portal","waf-rule"]},
-    {"from":"portal","to":"secrets","technique":"overprivileged identity","cost":15,"controls":["least-privilege","workload-identity"]},
-    {"from":"internet","to":"runner","technique":"workflow injection","cost":30,"controls":["trusted-builders","pin-actions"]},
-    {"from":"runner","to":"secrets","technique":"credential access","cost":10,"controls":["least-privilege","ephemeral-secrets"]}
-  ]
+    {"id":"internet-portal","from":"internet","to":"portal","technique":"public exploit","cost":20,"controls":["patch-portal","waf-rule"]},
+    {"id":"portal-secrets","from":"portal","to":"secrets","technique":"overprivileged identity","cost":15,"controls":["least-privilege","workload-identity"]},
+    {"id":"internet-runner","from":"internet","to":"runner","technique":"workflow injection","cost":30,"controls":["trusted-builders","pin-actions"]},
+    {"id":"runner-secrets","from":"runner","to":"secrets","technique":"credential access","cost":10,"controls":["least-privilege","ephemeral-secrets"]}
+  ],
+  "controls": {
+    "least-privilege": {"effectiveness":0.85,"status":"validated","evidence":"quarterly IAM review"},
+    "patch-portal": {"effectiveness":0.9,"status":"implemented"},
+    "waf-rule": {"effectiveness":0.45,"status":"implemented"},
+    "workload-identity": {"effectiveness":0.8,"status":"planned"},
+    "trusted-builders": {"effectiveness":0.75,"status":"implemented"},
+    "pin-actions": {"effectiveness":0.65,"status":"validated","evidence":"workflow policy test"},
+    "ephemeral-secrets": {"effectiveness":0.8,"status":"implemented"}
+  },
+  "scoring": {
+    "criticality_weight":10,
+    "cost_weight":1,
+    "base_offset":25
+  }
 }

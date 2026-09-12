@@ -1,15 +1,36 @@
 name: verify
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 permissions:
   contents: read
 jobs:
   test:
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12", "3.13"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: "3.12"
-      - run: python -m pip install .
-      - run: PYTHONPATH=src python -m unittest -v tests/test_aegis_graph.py
-      - run: aegis-graph examples/model.json --format mermaid -o /tmp/graph.md
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install ".[dev]"
+      - run: ruff check src tests
+      - run: mypy src
+      - run: coverage run --branch -m unittest -v tests/test_aegis_graph.py tests/test_validation_corpus.py
+      - run: coverage report --fail-under=85
+      - name: Validate example model schema
+        run: python -c 'import json,jsonschema; jsonschema.validate(json.load(open("examples/model.json")), json.load(open("docs/model.schema.json")))'
+      - run: python -m build
+      - name: CLI smoke tests
+        run: |
+          aegis-graph examples/model.json --format json -o /tmp/paths.json
+          aegis-graph examples/model.json --format mermaid -o /tmp/graph.md
+          python -c 'import json; data=json.load(open("/tmp/paths.json")); assert data["meta"]["risk_is_probability"] is False'
+          grep -q 'flowchart LR' /tmp/graph.md
+      - if: matrix.python == '3.12'
+        run: pip-audit
