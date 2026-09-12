@@ -2,7 +2,6 @@ import unittest
 
 from aegis_graph import ScoringConfig, enumerate_paths, mermaid, parse, recommend, score_path
 
-
 MODEL = {
     "nodes": [
         {"id": "internet", "kind": "attacker", "entry": True},
